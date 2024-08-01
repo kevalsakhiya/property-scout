@@ -103,5 +103,5 @@ if __name__ == "__main__":
     
     if feature_df is not None:
         saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'processed' / 'gurgaon_properties_post_feature_selection.csv'
-        feature_df.to_csv(saving_path)
+        feature_df.to_csv(saving_path,index=False)
         logger.info(f"Data cleaned and saved to 'gurgaon_properties_missing_value_imputation_v1.csv'")
