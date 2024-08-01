@@ -3,7 +3,7 @@ import logging
 import zipfile
 from pathlib import Path
 
-def unzip_file(zip_file_path, extract_dir_path):
+def unzip_file(zip_file_path:Path, extract_dir_path:Path) -> None:
     """Extracts the data from the zip file and saves it into the data/raw folder."""
     # Logging setup
     logging.basicConfig(level=logging.INFO)
