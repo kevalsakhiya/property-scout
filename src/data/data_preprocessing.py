@@ -3,6 +3,7 @@ import numpy as np
 from pathlib import Path
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.model_selection import train_test_split
 import logging
 
 # Configure logging
@@ -67,14 +68,40 @@ def create_transformed_df(X_transformed:np.ndarray, preprocessor:ColumnTransform
         logger.error(f"Error creating transformed DataFrame: {e}")
         raise
 
+def save_data(df_transformed: pd.DataFrame,file_path:str, test_size: float = 0.2, random_state: int = 42) -> None:
+    """
+    Splits the transformed DataFrame into train and test sets, then saves them as CSV files.
+    """
+    try:
+        logger.info("Starting the data split process.")
+        train_df, test_df = train_test_split(df_transformed, test_size=test_size, random_state=random_state)
+        
+        train_file_path = f"{file_path}/train.csv"
+        test_file_path = f"{file_path}/test.csv"
+        
+        logger.info(f"Saving train data to {train_file_path}.")
+        train_df.to_csv(train_file_path, index=False)
+        
+        logger.info(f"Saving test data to {test_file_path}.")
+        test_df.to_csv(test_file_path, index=False)
+        
+        logger.info("Data successfully saved.")
+        
+    except Exception as e:
+        logger.error(f"An error occurred while saving the data: {e}")
+        raise
+
+
+
+
 def main():
     columns_to_scale = ['property_type', 'bedRoom', 'bathroom', 'built_up_area', 'servant room', 'store room']
     columns_to_encode = ['sector', 'balcony', 'agePossession', 'furnishing_type', 'luxury_category', 'floor_category']
     price_column = ['price']
 
-    data_path = Path(__file__).resolve().parent.parent.parent
+    base_path = Path(__file__).resolve().parent.parent.parent
     
-    file_path = f"{data_path}/data/interim/gurgaon_properties_post_feature_selection.csv"
+    file_path = f"{base_path}/data/interim/gurgaon_properties_post_feature_selection.csv"
 
     try:
         logger.info("Loading data file")
@@ -91,8 +118,11 @@ def main():
         logger.info("Adding price column to the dataframe")
         df_transformed['price'] = y_transformed
         
+        save_path = f"{base_path}/data/processed"
+        save_data(df_transformed, save_path)
+
         logger.info("Saving the transformed dataframe")
-        output_filepath = f"{data_path}/data/processed/preprocessing_applied_dataset.csv"
+        output_filepath = f"{base_path}/data/processed/preprocessing_applied_dataset.csv"
 
         logger.info("Saving dataframe to CSV file")
         df_transformed.to_csv(output_filepath, index=False)
