@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.INFO,
                     )
 logger = logging.getLogger(__name__)
 
-def load_data(filepath):
+def load_data(filepath:Path) -> pd.DataFrame:
     """Load data from a CSV file."""
     try:
         df = pd.read_csv(filepath)
@@ -20,7 +20,7 @@ def load_data(filepath):
         logger.error(f"Error loading data from {filepath}: {e}")
         raise
 
-def preprocess_data(df, columns_to_scale, columns_to_encode, price_column):
+def preprocess_data(df:pd.DataFrame, columns_to_scale:list, columns_to_encode:list,price_column:list) -> (np.ndarray,np.ndarray,ColumnTransformer):
     """Preprocess the data: scale numeric features and encode categorical features."""
     try:
         # Separating features and target variable
@@ -49,7 +49,7 @@ def preprocess_data(df, columns_to_scale, columns_to_encode, price_column):
         logger.error(f"Error during preprocessing: {e}")
         raise
 
-def create_transformed_df(X_transformed, preprocessor, columns_to_scale, columns_to_encode):
+def create_transformed_df(X_transformed:np.ndarray, preprocessor:ColumnTransformer, columns_to_scale:list, columns_to_encode:list) -> pd.DataFrame:
     """Create a DataFrame with the transformed features."""
     try:
         num_feature_names = columns_to_scale
