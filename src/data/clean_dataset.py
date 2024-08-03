@@ -246,16 +246,16 @@ if __name__ == "__main__":
     file_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'raw' / 'gurgaon_properties_cleaned_v2.csv'
     outlier_cleaned_df = remove_outliers(file_path)
     if outlier_cleaned_df is not None:
-        saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_outlier_treated_v1.csv'
+        saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'cleaned' / 'gurgaon_properties_outlier_treated_v1.csv'
         save_df_to_csv(outlier_cleaned_df,saving_path)
         
         logger.info(f"Data cleaned and saved to 'gurgaon_properties_cleaned_v3.csv'")
     
     logger.info(f"Removing missing data'")
 
-    file_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_outlier_treated_v1.csv'
+    file_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'cleaned' / 'gurgaon_properties_outlier_treated_v1.csv'
     clean_missing_data = remove_missingdata(file_path)
     if clean_missing_data is not None:
-        saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_missing_value_imputation_v1.csv'
+        saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'cleaned' / 'gurgaon_properties_missing_value_imputation_v1.csv'
         save_df_to_csv(clean_missing_data,saving_path)
         logger.info(f"Data cleaned and saved to 'gurgaon_properties_missing_value_imputation_v1.csv'")

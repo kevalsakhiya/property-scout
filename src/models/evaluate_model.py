@@ -71,6 +71,29 @@ def save_metrics(metrics: dict, metrics_path: str):
         logger.error(f"Failed to save metrics to {metrics_path}: {e}")
         raise
 
+def save_model_info(run_id: str, model_path: str, file_path: str) -> None:
+    """Save the model run ID and path to a JSON file."""
+    try:
+        file_path = Path(file_path)
+        # Extract directory path from file path
+        directory = file_path.parent
+        
+        # Check if directory exists, if not, create it
+        if not directory.exists():
+            logger.info(f"Creating directory: {directory}")
+            directory.mkdir(parents=True, exist_ok=True)
+        else:
+            logger.info(f"Directory already exists: {directory}")
+
+        model_info = {'run_id': run_id, 'model_path': model_path}
+        with open(file_path, 'w') as file:
+            json.dump(model_info, file, indent=4)
+        logger.info('Model info saved to %s', file_path)
+    except Exception as e:
+        logger.error('Error occurred while saving the model info: %s', e)
+        raise
+
+
 def main():
     base_path = Path(__file__).resolve().parent.parent.parent
     model_path = f'{base_path}/models/SVR_model.joblib'
@@ -93,10 +116,13 @@ def main():
             # loging model in mlflow
             mlflow.sklearn.log_model(model,"model")
 
+            save_model_info(run.info.run_id, model_path, 'reports/experiment_info.json')
+
             # making x_test and y_test
             X_test = data.iloc[:, :-1]
             y_test = data.iloc[:, -1]
-
+            
+            logger.info('Evaluating the model, This may take some time.')
             metrics = evaluate_model(model, X_test, y_test)
 
             # logging model metrics in mlflow

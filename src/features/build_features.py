@@ -124,7 +124,7 @@ def save_df_to_csv(df: pd.DataFrame, file_path: str):
         raise
  
 if __name__ == "__main__":
-    file_path = saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_missing_value_imputation_v1.csv'
+    file_path = saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'cleaned' / 'gurgaon_properties_missing_value_imputation_v1.csv'
     feature_df = build_features(file_path)
     
     if feature_df is not None:
