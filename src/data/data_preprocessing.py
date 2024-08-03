@@ -79,6 +79,16 @@ def save_data(df_transformed: pd.DataFrame,file_path:str, test_size: float = 0.2
         train_file_path = f"{file_path}/train.csv"
         test_file_path = f"{file_path}/test.csv"
         
+        directory = Path(file_path).parent
+        
+        # Check if directory exists, if not, create it
+        if not directory.exists():
+            logger.info(f"Creating directory: {directory}")
+            directory.mkdir(parents=True, exist_ok=True)
+        else:
+            logger.info(f"Directory already exists: {directory}")
+
+        # Saving data to csv
         logger.info(f"Saving train data to {train_file_path}.")
         train_df.to_csv(train_file_path, index=False)
         

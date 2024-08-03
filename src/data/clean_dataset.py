@@ -211,6 +211,33 @@ def remove_missingdata(data_file_path: Path) -> pd.DataFrame:
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
 
+
+def save_df_to_csv(df: pd.DataFrame, file_path: str):
+    """
+    Save a pandas DataFrame to a CSV file. If the directory does not exist, create it.
+    """
+    try:
+        # Convert file_path to a Path object
+        file_path = Path(file_path)
+        
+        # Extract directory path from file path
+        directory = file_path.parent
+        
+        # Check if directory exists, if not, create it
+        if not directory.exists():
+            logger.info(f"Creating directory: {directory}")
+            directory.mkdir(parents=True, exist_ok=True)
+        else:
+            logger.info(f"Directory already exists: {directory}")
+        
+        # Save the DataFrame to a CSV file
+        df.to_csv(file_path, index=False)
+        logger.info(f"DataFrame saved successfully to {file_path}")
+    
+    except Exception as e:
+        logger.error(f"Failed to save DataFrame to {file_path}: {e}")
+        raise
+
 # Example usage
 if __name__ == "__main__":
     
@@ -220,14 +247,15 @@ if __name__ == "__main__":
     outlier_cleaned_df = remove_outliers(file_path)
     if outlier_cleaned_df is not None:
         saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_outlier_treated_v1.csv'
-        outlier_cleaned_df.to_csv(saving_path, index=False)
+        save_df_to_csv(outlier_cleaned_df,saving_path)
+        
         logger.info(f"Data cleaned and saved to 'gurgaon_properties_cleaned_v3.csv'")
     
     logger.info(f"Removing missing data'")
-    
+
     file_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_outlier_treated_v1.csv'
     clean_missing_data = remove_missingdata(file_path)
     if clean_missing_data is not None:
         saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_missing_value_imputation_v1.csv'
-        clean_missing_data.to_csv(saving_path, index=False)
+        save_df_to_csv(clean_missing_data,saving_path)
         logger.info(f"Data cleaned and saved to 'gurgaon_properties_missing_value_imputation_v1.csv'")

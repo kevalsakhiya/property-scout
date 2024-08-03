@@ -96,12 +96,38 @@ def build_features(data_file_path: Path) -> pd.DataFrame:
     except Exception as e:
         logger.error(f"An error occurred during feature engineering: {e}")
         raise e
+
+def save_df_to_csv(df: pd.DataFrame, file_path: str):
+    """
+    Save a pandas DataFrame to a CSV file. If the directory does not exist, create it.
+    """
+    try:
+        # Convert file_path to a Path object
+        file_path = Path(file_path)
+        
+        # Extract directory path from file path
+        directory = file_path.parent
+        
+        # Check if directory exists, if not, create it
+        if not directory.exists():
+            logger.info(f"Creating directory: {directory}")
+            directory.mkdir(parents=True, exist_ok=True)
+        else:
+            logger.info(f"Directory already exists: {directory}")
+        
+        # Save the DataFrame to a CSV file
+        df.to_csv(file_path, index=False)
+        logger.info(f"DataFrame saved successfully to {file_path}")
     
+    except Exception as e:
+        logger.error(f"Failed to save DataFrame to {file_path}: {e}")
+        raise
+ 
 if __name__ == "__main__":
     file_path = saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_missing_value_imputation_v1.csv'
     feature_df = build_features(file_path)
     
     if feature_df is not None:
-        saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'processed' / 'gurgaon_properties_post_feature_selection.csv'
-        feature_df.to_csv(saving_path,index=False)
+        saving_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'interim' / 'gurgaon_properties_post_feature_selection.csv'
+        save_df_to_csv(feature_df,saving_path)
         logger.info(f"Data cleaned and saved to 'gurgaon_properties_missing_value_imputation_v1.csv'")
