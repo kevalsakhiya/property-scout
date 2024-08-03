@@ -3,13 +3,30 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 import joblib
+import yaml
 
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error, r2_score, make_scorer
 from sklearn.svm import SVR
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+def load_params(params_path: str) -> dict:
+    """Load parameters from a YAML file."""
+    try:
+        with open(params_path, 'r') as file:
+            params = yaml.safe_load(file)
+        logger.debug('Parameters retrieved from %s', params_path)
+        return params
+    except FileNotFoundError:
+        logger.error('File not found: %s', params_path)
+        raise
+    except yaml.YAMLError as e:
+        logger.error('YAML error: %s', e)
+        raise
+    except Exception as e:
+        logger.error('Unexpected error: %s', e)
+        raise
 
 def load_data(file_path: str) -> pd.DataFrame:
     """
@@ -23,14 +40,14 @@ def load_data(file_path: str) -> pd.DataFrame:
         logger.error(f"Error loading data from {file_path}: {e}")
         raise
 
-def split_data(df: pd.DataFrame):
+def split_data(df: pd.DataFrame, test_size:float=0.2,random_state:int=42):
     """
     Split the dataset into training and testing sets.
     """
     try:
         X = df.drop(columns=['price'])
         y = df['price']
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
         logger.info("Data split into training and testing sets successfully.")
         return X_train, X_test, y_train, y_test
     except Exception as e:
@@ -66,6 +83,9 @@ def main():
     data_file_path = f'{base_path}/data/processed/preprocessing_applied_dataset.csv'
     model_file_path = f"{base_path}/models/SVR_model.joblib"
     
+    params = load_params(params_path='params.yaml')
+    test_size = params['model-training']['test_size']
+    random_state = params['model-training']['test_size']
     # Load data
     df = load_data(data_file_path)
     

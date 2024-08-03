@@ -94,6 +94,3 @@ target/
 # model files
 *.pickle
 *.joblib
-
-# reports
-# reports/*.json

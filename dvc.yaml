@@ -28,6 +28,9 @@ stages:
     - data/processed
   model-training:
     cmd: python src/models/train_model.py
+    params:
+    - model-training.test_size
+    - model-training.random_state
     deps:
     - data/processed
     - src/models/train_model.py
@@ -42,3 +45,8 @@ stages:
     - reports/experiment_info.json
     metrics:
     - reports/evaluation_metrics.json
+  model-register:
+    cmd: python src/models/register_model.py
+    deps:
+    - reports/experiment_info.json
+    - src/models/register_model.py
