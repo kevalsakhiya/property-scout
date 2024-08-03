@@ -100,7 +100,7 @@ def main():
     data_path = f'{base_path}/data/processed/test.csv'
     metrics_path = f'{base_path}/reports/evaluation_metrics.json'
     
-    mlflow.set_experiment('Final-model')
+    mlflow.set_experiment('dvc-pipeline')
 
     with mlflow.start_run() as run:
         try:

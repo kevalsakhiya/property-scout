@@ -16,7 +16,7 @@ stages:
     cmd: python src/features/build_features.py
     deps:
     - data/cleaned
-    - src/data/features/build_features.py
+    - src/features/build_features.py
     outs:
     - data/interim
   data-preprocessing:

@@ -72,6 +72,15 @@ def save_model(model: SVR, file_path: str) -> None:
     Save the trained model to a file using joblib.
     """
     try:
+        directory = Path(file_path).parent
+        
+        # Check if directory exists, if not, create it
+        if not directory.exists():
+            logger.info(f"Creating directory: {directory}")
+            directory.mkdir(parents=True, exist_ok=True)
+        else:
+            logger.info(f"Directory already exists: {directory}")
+
         joblib.dump(model, file_path)
         logger.info(f"Model saved successfully to {file_path}.")
     except Exception as e:
@@ -90,7 +99,7 @@ def main():
     df = load_data(data_file_path)
     
     # Split data
-    X_train, X_test, y_train, y_test = split_data(df)
+    X_train, X_test, y_train, y_test = split_data(df,test_size=float(test_size),random_state=int(random_state))
     
     # Train model
     svr_model = train_model(X_train, y_train)
