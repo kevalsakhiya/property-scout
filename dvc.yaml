@@ -26,7 +26,7 @@ stages:
     - src/data/data_preprocessing.py
     outs:
     - data/processed
-  model-training:
+  model-building:
     cmd: python src/models/train_model.py
     params:
     - model-training.test_size
@@ -50,3 +50,12 @@ stages:
     deps:
     - reports/experiment_info.json
     - src/models/register_model.py
+  recommender-system-building:
+    cmd: python src/recommender_system/distance_based_recommender_system.py && python src/recommender_system/attribute_based_recommender_system.py && python src/recommender_system/facility_based_recommender_system.py
+    deps:
+      - reports/experiment_info.json
+      - src/recommender_system/distance_based_recommender_system.py
+      - src/recommender_system/attribute_based_recommender_system.py
+      - src/recommender_system/facility_based_recommender_system.py
+    outs:
+      - recommender_systems

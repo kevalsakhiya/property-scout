@@ -97,3 +97,5 @@ target/
 
 # reports
 reports/*.json
+/models
+/recommender_systems

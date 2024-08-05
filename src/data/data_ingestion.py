@@ -39,6 +39,6 @@ if __name__ == '__main__':
     log_fmt = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     logging.basicConfig(level=logging.INFO, format=log_fmt)
 
-    zip_file_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'gurgaon_properties_cleaned_v2.zip'
+    zip_file_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'datasets.zip'
     extract_dir_path = Path(__file__).resolve().parent.parent.parent / 'data' / 'raw'
     unzip_file(zip_file_path, extract_dir_path)
